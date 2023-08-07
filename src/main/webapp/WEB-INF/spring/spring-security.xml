@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:security="http://www.springframework.org/schema/security"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/security
+        http://www.springframework.org/schema/security/spring-security.xsd">
+	
+    <security:http auto-config="true">
+    	<!-- Configuración de las rutas y permisos -->
+    	<!-- Inicio -->
+    	<security:intercept-url pattern="/" access="hasAnyAuthority('SUPERADMIN')" />
+        <security:intercept-url pattern="/home" access="hasAnyAuthority('SUPERADMIN')" />
+        
+        <!-- Usuario -->
+        <security:intercept-url pattern="/usuarios" access="hasAnyAuthority('SUPERADMIN')" />
+        
+        <!-- Otros
+        <security:intercept-url pattern="/contacto" access="hasAnyAuthority('SUPERADMIN', 'CLIENTE')"  /> -->
+        
+        
+        <!-- Configuración del formulario de inicio de sesión -->
+        <security:form-login login-page="/login" 
+        	login-processing-url="/login-process"
+            authentication-failure-url="/loginerror"
+            username-parameter="usuario"
+            password-parameter="contrasenna" />
+        
+        <!-- Developer: https://www.facebook.com/iEtzel -->
+        <!-- Configuración del manejo de acceso denegado -->
+        <security:access-denied-handler error-page="/accessdenied" />
+            
+        <security:csrf disabled="true" />
+        
+        <!-- Configuración del logout -->
+        <security:logout logout-url="/logout"
+			logout-success-url="/login" />
+    </security:http>
+
+    <security:authentication-manager>
+        <security:authentication-provider>
+            <security:password-encoder hash="bcrypt" />
+            <security:user-service>
+                <security:user name="superadminetzel" authorities="SUPERADMIN"
+                    password="$2a$10$Hjz3ev0X4XXDNIRC7XYAv.EyjKh24DwZQOu.FmeEzbrCIGigGNS.i" />
+                <security:user name="useretzel" authorities="USER"
+                    password="$2a$11$uDMdK7ajw8m5T5aCIUmWS.9LvOn0mlaW7osvcZOTc1JXcIzDTmDdK" />
+            </security:user-service>
+        </security:authentication-provider>
+    </security:authentication-manager>
+	<!-- Developer: https://www.facebook.com/iEtzel -->
+</beans>
